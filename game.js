@@ -136,9 +136,9 @@
     ctx.clearRect(0, 0, W, W);
 
     // Grid background subtle
-    ctx.fillStyle = '#0b1226';
+    ctx.fillStyle = '#fff5f9';
     ctx.fillRect(0, 0, W, W);
-    ctx.strokeStyle = 'rgba(148, 163, 184, 0.06)';
+    ctx.strokeStyle = 'rgba(255, 126, 182, 0.18)';
     ctx.lineWidth = 1;
     for (let i = 1; i < GRID; i++) {
       const p = Math.round(i * cell) + 0.5;
@@ -153,7 +153,7 @@
     for (let i = snake.length - 1; i >= 1; i--) {
       const s = snake[i];
       const t = i / Math.max(snake.length - 1, 1);
-      const color = lerpColor('#22d3ee', '#34d399', t);
+      const color = lerpColor('#ff7eb6', '#ffb3d1', t);
       drawCell(s.x, s.y, color, false);
     }
     // Snake head (放大 1.4倍 + 图片)
@@ -183,13 +183,13 @@
       ctx.restore();
       // 描边
       ctx.lineWidth = Math.max(1.5, cell * 0.08);
-      ctx.strokeStyle = '#22d3ee';
+      ctx.strokeStyle = '#ff4d8d';
       ctx.beginPath();
       ctx.arc(cx, cy, sz / 2, 0, Math.PI * 2);
       ctx.stroke();
     } else {
       // 图片未加载时的后备
-      drawCell(s.x, s.y, '#22d3ee', true);
+      drawCell(s.x, s.y, '#ff7eb6', true);
     }
   }
 

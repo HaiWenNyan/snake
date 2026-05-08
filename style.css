@@ -1,13 +1,14 @@
 :root {
-  --bg: #0f172a;
-  --bg2: #1e293b;
-  --fg: #e2e8f0;
-  --muted: #94a3b8;
-  --accent: #22d3ee;
-  --accent2: #34d399;
-  --danger: #f43f5e;
-  --grid: #1f2a44;
-  --cell: #0b1226;
+  --bg: #fff0f6;
+  --bg2: #ffe4ef;
+  --fg: #5a2a4a;
+  --muted: #b97aa0;
+  --accent: #ff7eb6;
+  --accent2: #ffb3d1;
+  --danger: #ff4d8d;
+  --grid: #ffd6e7;
+  --cell: #fff5f9;
+  --border: #ffc1dc;
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -15,7 +16,10 @@ html, body { height: 100%; }
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  background: radial-gradient(1200px 800px at 50% -200px, #1e293b, var(--bg) 60%);
+  background:
+    radial-gradient(900px 600px at 20% -100px, #ffd1e8, transparent 60%),
+    radial-gradient(900px 600px at 100% 100%, #ffe6c7, transparent 60%),
+    var(--bg);
   color: var(--fg);
   overflow: hidden;
   user-select: none;
@@ -41,13 +45,14 @@ body {
 .score { display: flex; gap: 16px; }
 .score-item {
   background: var(--bg2);
-  border: 1px solid #243049;
-  border-radius: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
   padding: 6px 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 64px;
+  box-shadow: 0 2px 8px rgba(255, 126, 182, 0.15);
 }
 .score-item .label { font-size: 11px; color: var(--muted); }
 .score-item .value { font-size: 18px; font-weight: 700; color: var(--accent); }
@@ -55,11 +60,12 @@ body {
 .icon-btn {
   background: var(--bg2);
   color: var(--fg);
-  border: 1px solid #243049;
-  border-radius: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
   width: 44px; height: 44px;
   font-size: 18px;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255, 126, 182, 0.15);
 }
 .icon-btn:active { transform: scale(0.96); }
 
@@ -77,8 +83,8 @@ body {
   aspect-ratio: 1 / 1;
   height: auto;
   background: var(--cell);
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4), inset 0 0 0 1px #1f2a44;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(255, 126, 182, 0.25), inset 0 0 0 2px var(--border);
   display: block;
   touch-action: none;
 }
@@ -86,8 +92,8 @@ body {
 .overlay {
   position: absolute;
   inset: 8px 12px;
-  border-radius: 16px;
-  background: rgba(15, 23, 42, 0.72);
+  border-radius: 20px;
+  background: rgba(255, 240, 246, 0.7);
   backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
@@ -98,10 +104,10 @@ body {
 .overlay-card {
   text-align: center;
   padding: 20px 24px;
-  border-radius: 14px;
-  background: rgba(30, 41, 59, 0.9);
-  border: 1px solid #2a374f;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(255, 126, 182, 0.3);
   max-width: 80%;
 }
 .overlay-card h1 {
@@ -116,22 +122,24 @@ body {
 
 .primary-btn {
   background: linear-gradient(135deg, var(--accent), var(--accent2));
-  color: #0b1226;
+  color: #ffffff;
   border: none;
-  border-radius: 10px;
-  padding: 10px 20px;
+  border-radius: 999px;
+  padding: 10px 24px;
   font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 6px 16px rgba(255, 126, 182, 0.4);
 }
 .primary-btn:active { transform: scale(0.97); }
 
 .ghost-btn {
-  background: transparent;
+  background: #ffffff;
   color: var(--fg);
-  border: 1px solid #2a374f;
-  border-radius: 10px;
-  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 18px;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255, 126, 182, 0.15);
 }
 
 .controls {
@@ -154,17 +162,18 @@ body {
   gap: 8px;
 }
 .dbtn {
-  background: var(--bg2);
-  color: var(--fg);
-  border: 1px solid #243049;
-  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff, var(--bg2));
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 20px;
   font-size: clamp(22px, 4.5vh, 40px);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 12px rgba(255, 126, 182, 0.25);
 }
-.dbtn:active { background: #2a3a5e; transform: scale(0.96); }
+.dbtn:active { background: var(--accent2); color: #ffffff; transform: scale(0.96); }
 .dbtn.up { grid-column: 2; grid-row: 1; }
 .dbtn.left { grid-column: 1; grid-row: 2; }
 .dbtn.right { grid-column: 3; grid-row: 2; }
