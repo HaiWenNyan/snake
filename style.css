@@ -136,27 +136,29 @@ body {
 
 .controls {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 14px;
   padding: 8px 16px 16px;
 }
 
 .dpad {
   position: relative;
-  width: 168px;
-  height: 168px;
+  /* 每个按键约占屏幕短边的 1/5，方向盘整体 = 3 倍按键 */
+  --btn: min(20vw, 18vh);
+  width: calc(var(--btn) * 3 + 16px);
+  height: calc(var(--btn) * 3 + 16px);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  gap: 6px;
+  gap: 8px;
 }
 .dbtn {
   background: var(--bg2);
   color: var(--fg);
   border: 1px solid #243049;
-  border-radius: 12px;
-  font-size: 18px;
+  border-radius: 16px;
+  font-size: clamp(22px, 4.5vh, 40px);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -168,27 +170,9 @@ body {
 .dbtn.right { grid-column: 3; grid-row: 2; }
 .dbtn.down { grid-column: 2; grid-row: 3; }
 
-.side {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: stretch;
-}
-.speed {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--muted);
-}
-.speed input[type="range"] {
-  width: 100%;
-  accent-color: var(--accent);
-}
+#restartBtn { align-self: center; }
 
 @media (max-height: 640px) {
-  .dpad { width: 140px; height: 140px; }
   .score-item { padding: 4px 10px; }
   .score-item .value { font-size: 16px; }
 }

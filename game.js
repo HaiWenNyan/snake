@@ -11,7 +11,6 @@
   const startBtn = document.getElementById('startBtn');
   const pauseBtn = document.getElementById('pauseBtn');
   const restartBtn = document.getElementById('restartBtn');
-  const speedInput = document.getElementById('speed');
 
   const GRID = 20; // 20x20 grid
   const BEST_KEY = 'snake.best.v1';
@@ -19,7 +18,7 @@
   let cell = canvas.width / GRID;
   let snake, dir, nextDir, food, score, best, alive, paused, started;
   let lastTick = 0;
-  let stepMs = 140;
+  const stepMs = 130;
 
   best = parseInt(localStorage.getItem(BEST_KEY) || '0', 10) || 0;
   bestEl.textContent = best;
@@ -73,14 +72,6 @@
       localStorage.setItem(BEST_KEY, String(best));
     }
   }
-
-  function setSpeed(level) {
-    // level 1..5 -> ms per step
-    const map = { 1: 200, 2: 170, 3: 140, 4: 110, 5: 80 };
-    stepMs = map[level] || 140;
-  }
-  setSpeed(parseInt(speedInput.value, 10));
-  speedInput.addEventListener('input', () => setSpeed(parseInt(speedInput.value, 10)));
 
   function tick(ts) {
     if (!started) return;
