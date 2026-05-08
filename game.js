@@ -20,6 +20,17 @@
   let lastTick = 0;
   const stepMs = 130;
 
+  // 图片资源
+  const imgHead = new Image();
+  const imgHeadEat = new Image();
+  const imgFood = new Image();
+  imgHead.src = 'head.jpg';
+  imgHeadEat.src = 'head_eat.jpg';
+  imgFood.src = 'food.jpg';
+  let eatUntil = 0; // 同顿饭后头部表情切换结束时间戳
+  // 图片加载完触发一次重绘
+  [imgHead, imgHeadEat, imgFood].forEach(im => im.addEventListener('load', () => draw()));
+
   best = parseInt(localStorage.getItem(BEST_KEY) || '0', 10) || 0;
   bestEl.textContent = best;
 
@@ -105,6 +116,7 @@
     if (head.x === food.x && head.y === food.y) {
       score += 10;
       updateScore();
+      eatUntil = performance.now() + 350; // 切换为睹眼头像 0.35s
       placeFood();
     } else {
       snake.pop();
@@ -137,12 +149,47 @@
     // Food
     drawFood(food.x, food.y);
 
-    // Snake
-    for (let i = snake.length - 1; i >= 0; i--) {
+    // Snake body (从尾到颈，最后画头部避免被身体遮住)
+    for (let i = snake.length - 1; i >= 1; i--) {
       const s = snake[i];
       const t = i / Math.max(snake.length - 1, 1);
-      const color = i === 0 ? '#22d3ee' : lerpColor('#22d3ee', '#34d399', t);
-      drawCell(s.x, s.y, color, i === 0);
+      const color = lerpColor('#22d3ee', '#34d399', t);
+      drawCell(s.x, s.y, color, false);
+    }
+    // Snake head (放大 1.4倍 + 图片)
+    if (snake.length > 0) drawHead(snake[0]);
+  }
+
+  function drawHead(s) {
+    const eating = performance.now() < eatUntil;
+    const img = eating ? imgHeadEat : imgHead;
+    const scale = 1.4;
+    const sz = cell * scale;
+    const cx = s.x * cell + cell / 2;
+    const cy = s.y * cell + cell / 2;
+    const px = cx - sz / 2;
+    const py = cy - sz / 2;
+    if (img.complete && img.naturalWidth > 0) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, sz / 2, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.clip();
+      // 按短边 cover
+      const iw = img.naturalWidth, ih = img.naturalHeight;
+      const ratio = Math.max(sz / iw, sz / ih);
+      const dw = iw * ratio, dh = ih * ratio;
+      ctx.drawImage(img, cx - dw / 2, cy - dh / 2, dw, dh);
+      ctx.restore();
+      // 描边
+      ctx.lineWidth = Math.max(1.5, cell * 0.08);
+      ctx.strokeStyle = '#22d3ee';
+      ctx.beginPath();
+      ctx.arc(cx, cy, sz / 2, 0, Math.PI * 2);
+      ctx.stroke();
+    } else {
+      // 图片未加载时的后备
+      drawCell(s.x, s.y, '#22d3ee', true);
     }
   }
 
@@ -169,14 +216,32 @@
   function drawFood(x, y) {
     const cx = x * cell + cell / 2;
     const cy = y * cell + cell / 2;
-    const r = cell * 0.36;
-    const grd = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, r * 0.2, cx, cy, r);
-    grd.addColorStop(0, '#fb7185');
-    grd.addColorStop(1, '#e11d48');
-    ctx.fillStyle = grd;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fill();
+    const r = cell * 0.62; // 比原来的 0.36 大约 1.7 倍
+    if (imgFood.complete && imgFood.naturalWidth > 0) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.clip();
+      const iw = imgFood.naturalWidth, ih = imgFood.naturalHeight;
+      const ratio = Math.max((r * 2) / iw, (r * 2) / ih);
+      const dw = iw * ratio, dh = ih * ratio;
+      ctx.drawImage(imgFood, cx - dw / 2, cy - dh / 2, dw, dh);
+      ctx.restore();
+      ctx.lineWidth = Math.max(1.5, cell * 0.08);
+      ctx.strokeStyle = '#fb7185';
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.stroke();
+    } else {
+      const grd = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, r * 0.2, cx, cy, r);
+      grd.addColorStop(0, '#fb7185');
+      grd.addColorStop(1, '#e11d48');
+      ctx.fillStyle = grd;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 
   function roundRect(x, y, w, h, r) {
